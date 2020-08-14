@@ -8,44 +8,29 @@ use App\Services\UserService;
 
 class UserController extends Controller
 {
-    private UserService $userservice;
+    private UserService $userService;
     public function __construct(UserService $userService)
     {
-        $this->userservice = $userService;
+        $this->userService = $userService;
     }
 
     public function index()
     {
-        return $this->userservice->index();
-    }
-
-    public function create()
-    {
-        //
+        return $this->userService->index();
     }
 
     public function store(Request $request)
     {
-        $this->userservice->store($request);
-    }
-
-    public function show($id)
-    {
-        //
-    }
-
-    public function edit($id)
-    {
-        //
+        $this->userService->store($request);
     }
 
     public function update(Request $request, $id)
     {
-        $this->userservice->update($request, $id);
+        $this->userService->update($request, $id);
     }
 
     public function destroy($id)
     {
-        $this->userservice->destroy($id);
+        $this->userService->destroy($id);
     }
 }

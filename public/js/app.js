@@ -1910,6 +1910,8 @@ module.exports = {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _config_config_json__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../config/config.json */ "./resources/js/config/config.json");
+var _config_config_json__WEBPACK_IMPORTED_MODULE_1___namespace = /*#__PURE__*/__webpack_require__.t(/*! ../config/config.json */ "./resources/js/config/config.json", 1);
 //
 //
 //
@@ -1975,9 +1977,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
+      country_api: _config_config_json__WEBPACK_IMPORTED_MODULE_1__[0]['country_api'],
+      user_api: _config_config_json__WEBPACK_IMPORTED_MODULE_1__[0]['user_api'],
       country: '',
       countries: [],
       name: '',
@@ -2000,7 +2005,7 @@ __webpack_require__.r(__webpack_exports__);
 
       axios__WEBPACK_IMPORTED_MODULE_0___default()({
         method: "get",
-        url: "http://127.0.0.1:8000/api/countries"
+        url: this.country_api
       }).then(function (response) {
         for (var i = 0; i < response.data['data'].length; i++) {
           _this.countries.push(response.data['data'][i]);
@@ -2020,7 +2025,7 @@ __webpack_require__.r(__webpack_exports__);
       if (this.user_id) {
         formData.append("_method", "PUT");
         axios__WEBPACK_IMPORTED_MODULE_0___default()({
-          url: "http://127.0.0.1:8000/api/users/" + this.user_id,
+          url: this.user_api + "/" + this.user_id,
           data: formData,
           method: 'POST' // here must be PUT method, but my server can't make it, so we send name "_method" and value "PUT" in parameters
 
@@ -2035,7 +2040,7 @@ __webpack_require__.r(__webpack_exports__);
         });
       } else {
         axios__WEBPACK_IMPORTED_MODULE_0___default()({
-          url: 'http://127.0.0.1:8000/api/users',
+          url: this.user_api,
           data: formData,
           method: 'POST'
         }).then(function (response) {
@@ -2055,7 +2060,7 @@ __webpack_require__.r(__webpack_exports__);
       this.users = [];
       axios__WEBPACK_IMPORTED_MODULE_0___default()({
         method: "get",
-        url: "http://127.0.0.1:8000/api/users?page=" + this.current_page
+        url: this.user_api + "?page=" + this.current_page
       }).then(function (response) {
         for (var i = 0; i < response.data['data'].length; i++) {
           _this3.users.push(response.data['data'][i]);
@@ -2074,7 +2079,7 @@ __webpack_require__.r(__webpack_exports__);
 
       axios__WEBPACK_IMPORTED_MODULE_0___default()({
         method: "delete",
-        url: "http://127.0.0.1:8000/api/users/" + user.id
+        url: this.user_api + "/" + user.id
       }).then(function (response) {
         _this4.displayUser();
 
@@ -50268,6 +50273,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Form_vue_vue_type_template_id_8048fca2___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
+
+/***/ }),
+
+/***/ "./resources/js/config/config.json":
+/*!*****************************************!*\
+  !*** ./resources/js/config/config.json ***!
+  \*****************************************/
+/*! exports provided: 0, default */
+/***/ (function(module) {
+
+module.exports = JSON.parse("[{\"user_api\":\"http://127.0.0.1:8000/api/users\",\"country_api\":\"http://127.0.0.1:8000/api/countries\"}]");
 
 /***/ }),
 

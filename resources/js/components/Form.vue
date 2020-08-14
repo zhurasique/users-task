@@ -65,10 +65,13 @@
 <script>
 
     import axios from "axios"
+    import apiJson from "../config/config.json"
 
     export default {
         data: function(){
             return {
+                country_api: apiJson[0]['country_api'],
+                user_api: apiJson[0]['user_api'],
                 country: '',
                 countries: [],
                 name: '',
@@ -91,7 +94,7 @@
             loadCountries: function () {
                 axios({
                     method: "get",
-                    url: "http://127.0.0.1:8000/api/countries"
+                    url: this.country_api
                 })
                     .then( response => {
                         for(var i = 0; i < response.data['data'].length; i++){
@@ -113,7 +116,7 @@
                     formData.append("_method", "PUT");
 
                     axios({
-                        url: "http://127.0.0.1:8000/api/users/" + this.user_id,
+                        url: this.user_api + "/" + this.user_id,
                         data: formData,
                         method: 'POST', // here must be PUT method, but my server can't make it, so we send name "_method" and value "PUT" in parameters
                     }).then( response => {
@@ -125,7 +128,7 @@
                     });
                 }else{
                     axios({
-                        url: 'http://127.0.0.1:8000/api/users',
+                        url: this.user_api,
                         data: formData,
                         method: 'POST',
                     }).then( response => {
@@ -142,7 +145,7 @@
                 this.users = [];
                 axios({
                     method: "get",
-                    url: "http://127.0.0.1:8000/api/users?page=" + this.current_page
+                    url: this.user_api + "?page=" + this.current_page
                 })
                     .then( response => {
                         for(var i = 0; i < response.data['data'].length; i++){
@@ -161,7 +164,7 @@
             deleteUser: function (user){
                 axios({
                     method: "delete",
-                    url: "http://127.0.0.1:8000/api/users/" + user.id
+                    url: this.user_api + "/" + user.id
                 })
                     .then( response => {
                         this.displayUser();
