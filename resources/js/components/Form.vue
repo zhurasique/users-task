@@ -1,6 +1,12 @@
 <template>
-<!--    <div id="target" class="preloader"><img src="https://i.pinimg.com/originals/45/12/4d/45124d126d0f0b6d8f5c4d635d466246.gif" class="css-class" alt="alt text"></div>-->
     <div :class="{'loading': loading}">
+        <div class="alert alert-success text-center" id="alert-success" role="alert">
+            <p v-text="alert_text"></p>
+        </div>
+        <div class="alert alert-danger text-center" id="alert-danger" role="alert">
+            <p v-text="alert_text"></p>
+        </div>
+
         <form>
             <div class="form-group">
                 <strong>Name:</strong>
@@ -57,6 +63,9 @@
     </div>
 </template>
 <script>
+
+    import axios from "axios"
+
     export default {
         data: function(){
             return {
@@ -68,9 +77,11 @@
                 user_id: '',
                 current_page: 1,
                 last_page: '',
-                loading: true
+                loading: true,
+                alert_text: ''
             }
         },
+
         mounted(){
             this.loadCountries();
             this.displayUser()
@@ -78,16 +89,14 @@
 
         methods: {
             loadCountries: function () {
-                $.ajax({
+                axios({
                     method: "get",
                     url: "http://127.0.0.1:8000/api/countries"
                 })
-                    .then( data => {
-                        for(var i = 0; i < data['data'].length; i++){
-                            this.countries.push(data['data'][i]);
+                    .then( response => {
+                        for(var i = 0; i < response.data['data'].length; i++){
+                            this.countries.push(response.data['data'][i]);
                         }
-
-                        console.log();
                     }).
                 catch( error => {
                     console.log(error);
@@ -103,47 +112,45 @@
                 if(this.user_id){
                     formData.append("_method", "PUT");
 
-                    $.ajax({
+                    axios({
                         url: "http://127.0.0.1:8000/api/users/" + this.user_id,
                         data: formData,
-                        processData: false,
-                        contentType: false,
-                        type: 'POST',
-                        success: function(){
-                            self.name = '';
-                            self.email = '';
-                            self.country = '';
-                        }
+                        method: 'POST', // here must be PUT method, but my server can't make it, so we send name "_method" and value "PUT" in parameters
+                    }).then( response => {
+                        this.name = '';
+                        this.email = '';
+                        this.country = '';
+                        this.displayUser();
+                        this.showSuccessAlert("User has been edited!");
                     });
                 }else{
-                    $.ajax({
+                    axios({
                         url: 'http://127.0.0.1:8000/api/users',
                         data: formData,
-                        processData: false,
-                        contentType: false,
-                        type: 'POST',
-                        success: function(){
-                            self.name = '';
-                            self.email = '';
-                            self.country = '';
-                        }
+                        method: 'POST',
+                    }).then( response => {
+                            this.name = '';
+                            this.email = '';
+                            this.country = '';
+                            this.displayUser();
+                            this.showSuccessAlert("User has been saved!");
                     });
                 }
             },
 
             displayUser: function (){
                 this.users = [];
-                $.ajax({
+                axios({
                     method: "get",
                     url: "http://127.0.0.1:8000/api/users?page=" + this.current_page
                 })
-                    .then( data => {
-                        for(var i = 0; i < data['data'].length; i++){
-                            this.users.push(data['data'][i]);
+                    .then( response => {
+                        for(var i = 0; i < response.data['data'].length; i++){
+                            this.users.push(response.data['data'][i]);
                         }
 
-                        this.current_page = data['current_page'];
-                        this.last_page = data['last_page'];
+                        this.current_page = response.data['current_page'];
+                        this.last_page = response.data['last_page'];
                         this.pageLoading();
                     }).
                 catch( error => {
@@ -152,12 +159,13 @@
             },
 
             deleteUser: function (user){
-                $.ajax({
+                axios({
                     method: "delete",
                     url: "http://127.0.0.1:8000/api/users/" + user.id
                 })
-                    .then( data => {
+                    .then( response => {
                         this.displayUser();
+                        this.showDangerAlert("User has been deleted!");
                     }).
                 catch( error => {
                     console.log(error);
@@ -189,7 +197,27 @@
                 this.loading = false;
                 document.getElementById("subBtn").style.display = "unset";
                 document.getElementById("pageBtn").style.display = "flex";
-            }
+            },
+
+            showDangerAlert: function (text){
+                let alert = document.getElementById("alert-danger");
+                alert.style.display = "unset";
+                this.alert_text = text;
+
+                setTimeout(function (){
+                    alert.style.display = "none";
+                },2000);
+            },
+
+            showSuccessAlert: function (text){
+                let alert = document.getElementById("alert-success");
+                alert.style.display = "unset";
+                this.alert_text = text;
+
+                setTimeout(function (){
+                    alert.style.display = "none";
+                },2000);
+            },
         }
     }
 </script>

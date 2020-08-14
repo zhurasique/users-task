@@ -3,6 +3,20 @@
     border-top: unset !important;
 }
 
+#alert-danger{
+    display: none;
+    position: absolute;
+    top: 2%;
+    right: 46%;
+}
+
+#alert-success{
+    display: none;
+    position: absolute;
+    top: 2%;
+    right: 46%;
+}
+
 .loading {
     position: fixed;
     z-index: 9999;
